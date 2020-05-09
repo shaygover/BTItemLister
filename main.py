@@ -28,11 +28,41 @@ def main():
     for folder in get_list_of_folders():
         chdir(folder)
 
-        for file in get_list_of_files():
-            # Sort file content (Maybe by functions)
-            pass
+        # Line lists
+        new_items = list()
 
+        for file in get_list_of_files():
+            # Open the file
+            with open(file, newline='', encoding='utf_8') as item_collections:
+                items_reader = reader(item_collections, delimiter=',', quotechar='|')
+
+                # lose the first line
+                items_reader.__next__()
+
+                # Iterate the lines
+                for line in items_reader:
+                    if line[1] != "Reference":
+                        new_items.append(",".join(line))
+
+        # Remove duplicate cells
+        unique_items = list()
+        [unique_items.append(item) for item in new_items if item not in unique_items]
+
+        # Print to list.txt file
+        output_file = open("00" + folder + ".txt", "w")
+
+        for item in unique_items:
+            output_file.write(item + "\n")
+
+        output_file.close()
         chdir("..")
+
+    chdir("..")
+
+    print("Original Root: ", root_dir, "\n")
+    print("Current Root: ", getcwd(), "\n")
+
+    print("Done")
 
 
 if __name__ == '__main__':
